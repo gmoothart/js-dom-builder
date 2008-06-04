@@ -4,86 +4,94 @@
   @param {Array} tagNames
 */
 function domBuilder(parent, tagNames) {
-	//typecheck: parent must be assigned and a valid dom node!
+    //typecheck: parent must be assigned and a valid dom node!
 
-  	var that = {
-		rootElement: parent,
-		currentChild: parent,
-		document: parent.document,		
-		
-		/*
-		 * add
-		 * @param {String} tag
-		 * @param {Object} attributes
-		 */
-		add: function(tag, attributes) {
-			var el = document.createElement(tag);
+    var that = {
+        rootElement: parent,
+        currentChild: parent,
+        document: parent.document,
+        
+        /*
+         * add
+         * @param {String} tag
+         * @param {Object} attributes
+         */
+        add: function(tag, attributes) {
+            var el = document.createElement(tag);
 
-			for (name in attributes) {
-				el.setAttribute(name, attributes[name]);
-			}
-		
-			this.currentChild.appendChild(el);
-			this.currentChild = el;
-			return this;
-		},
-		
-		/*
-		 * text
-		 * @param {String} s
-		 */
-		text: function(s) {
-		    this.currentChild.innerHTML = s;
-			return this;
-		},
-		
-		/*
-		 * end
-		 */
-		end: function() {
-			if (this.currentChild != this.rootElement) {
- 				this.currentChild = this.currentChild.parentElement;
-			}
-		},
-		
-		/*
-		 * endId
-		 * ends the tag of the first parent with the specified id
-		 */
-		endId: function(id){		
-			while(this.currentChild.id != id && this.currentChild != this.rootElement) {
-				this.currentChild = this.currentChild.parentElement;
-			}
-		},
-		
-		/*
-		 * endTag
-		 * ends the tag of the first parent with the specified id
-		 */
-		endTag: function(tag) {
-			while(currentChild.id != id && currentChild != rootElement) {
-				currentChild = currentChild.parentElement;
-			}		
-		}
-  	}; //that
+            for (name in attributes) {
+                el.setAttribute(name, attributes[name]);
+            }
+        
+            this.currentChild.appendChild(el);
+            this.currentChild = el;
+            return this;
+        },
+        
+        /*
+         * text
+         * @param {String} s
+         */
+        text: function(s) {
+            this.currentChild.innerHTML = s;
+            return this;
+        },
+        
+        /*
+         * end
+         */
+        end: function() {
+            if (this.currentChild != this.rootElement) {
+                this.currentChild = this.currentChild.parentElement;
+            }
+        },
+        
+        /*
+         * endId
+         * ends the tag of the first parent with the specified id
+         */
+        endId: function(id){
+            while(this.currentChild.id != id && this.currentChild != this.rootElement) {
+                this.currentChild = this.currentChild.parentElement;
+            }
+        },
+        
+        /*
+         * endTag
+         * ends the tag of the first parent with the specified id
+         */
+        endTag: function(tag) {
+            while(currentChild.id != id && currentChild != rootElement) {
+                currentChild = currentChild.parentElement;
+            }
+        }
+    }; //that
 
-	autotags = ['div', 'span', 'table', 'tr', 'td', 'a', 'img', 'p', 'pre', 'code', 
-			    'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-	autotags = autotags.concat(tagNames);
+    autotags = ['div', 'span', 'table', 'tr', 'td', 'a', 'img', 'p', 'pre', 'code', 
+                'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+    if (tagNames && tagNames.length > 0) {
+        autotags = autotags.concat(tagNames);
+    }
   
-	for (i in autotags) {
-		// add the tags as functions on 'that'. But don't overwrite any existing properties!
-		//	these are just helpers that wrap calls to 'add'
-		tag = autotags[i];
-		if (!that[tag]) {
-			//closure bug!!!!!
-			that[tag] = function(attributes){
-				that.add(tag, attributes);
-		  	}
-		}
-	}
-	
-	return that;
+    for (i in autotags) {
+        // add the tags as functions on 'that'. But don't overwrite any existing properties!
+        // these are just helpers that wrap calls to 'add'
+        tag = autotags[i];
+        if (!that[tag]) {
+
+            (function() {
+                //need extra function and var to capture the current value of tag. 
+                // Otherwise, this function would always be executed with the last item in 
+                //  autotags, b/c of how closures wothrow                    
+                var t = tag;
+                that[t] = function(attributes) {
+                    return that.add(t, attributes);
+                }
+            })();
+        }
+    }
+    
+    return that;
 }
 
 /*
@@ -135,23 +143,23 @@ function domBuilder(parent, tagNames) {
 
     var table = domCreate({
       table: {
-	chiltren: [
-	  tr: {
-	    children: [
-	      td: { text: sass! }
-	      td: {
-		children: [
-		  div: {
-		    id: "guid"
-		    text = " ska never dies"
+    chiltren: [
+      tr: {
+        children: [
+          td: { text: sass! }
+          td: {
+        children: [
+          div: {
+            id: "guid"
+            text = " ska never dies"
 
-		  }
-		]
-	      }
-	    ]
+          }
+        ]
+          }
+        ]
 
-	  }
-	]
+      }
+    ]
       }
     });
 
@@ -160,10 +168,10 @@ var table = domCreate({
     tr: [
       { td: "sass" }
       { td: {
-	div: {
+    div: {
           id: "guid"
-	  text: " ska never dies"
-	}
+      text: " ska never dies"
+    }
       } }
     ]
   ]
@@ -203,8 +211,8 @@ node
       .td()
         .div({id: 'guid'}).text('ska never dies')
           .div()
-	    .text('')
-	  .end()
+        .text('')
+      .end()
         .endId('guid')
         .div()
     .endTag('tr')
@@ -221,15 +229,15 @@ node.add(
     node.tr(
       node.td( node.text('sass') ),
       node.td(
-	node.div({id: 'guid'}, 
-	  node.text('ska never dies'),
-	  node.div( node.text('') )
+    node.div({id: 'guid'}, 
+      node.text('ska never dies'),
+      node.div( node.text('') )
         )
       ) 
     ), 
     node.tr(
       node.td(
-	node.text('arst')
+    node.text('arst')
       ),
       node.td(
         node.div({id: 'ska'}, node.text('arst'))
@@ -247,12 +255,12 @@ function domTree2(parent)
   that = {
     rootNode: parent;
     add: function(tag) {
-	
+    
       return []
     }
 
     text: function(s) {
-	return s;
+    return s;
     }
 
   }
