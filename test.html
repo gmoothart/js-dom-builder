@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Test Dom Builder</title>
+		<script type="text/javascript" src="lib/YahooUI/yahoo-dom-event/yahoo-dom-event.js"></script>
+		<script type="text/javascript" src="dom-builder.js"></script>
+		<script type="text/javascript">
+			/*
+			 * Example:
+			 * <div id="div1" style="width: 100%">
+				 <div style="border: 5px;">
+					<span>chunky</span>
+					<span>bacon</span>					
+				 </div>
+				 <div>
+					google: 
+					<a href="http://www.google.com" id="goo-link">Google</a>					
+				 </div>
+			  </div>			
+			 * 
+			 * 
+			 */
+			function test() {
+				domBuilder(YAHOO.util.Dom.get('container'))
+				    .table()
+				  		.tr()
+				    		.td().text('sass')
+				    		.td()
+				        		.div( {id: 'guid'}).text('ska never dies')
+		    }
+			
+		</script>
+	</head>
+	<body onload="test();">
+		<div id="container">
+			
+		</div>
+	</body>
+</html>
