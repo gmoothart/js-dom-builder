@@ -7,7 +7,7 @@ function domBuilder(parent, tagNames) {
     //typecheck: parent must be assigned and a valid dom node!
 
     var that = {
-        rootElement: parent,
+        rootNode: parent,
         currentChild: parent,
         document: parent.document,
         
@@ -40,31 +40,44 @@ function domBuilder(parent, tagNames) {
         /*
          * end
          */
-        end: function() {
-            if (this.currentChild != this.rootElement) {
-                this.currentChild = this.currentChild.parentElement;
-            }
+        end: function(prop) {
+			/*
+			 * close parent by id
+			 */
+			if (prop.id) {
+	            while(this.currentChild.id != id && this.currentChild != this.rootNode) {
+	                this.currentChild = this.currentChild.parentNode;
+	            }					
+			}
+			/*
+			 * Close parent by tag name
+			 */
+			else if (prop.tag) {
+	            while(this.currentChild.tagName != prop.tag && this.currentChild != this.rootNode) {
+	                this.currentChild = this.currentChild.parentNode;
+	            }
+			}
+			/*
+			 * Close first parent
+			 */
+			else {
+	            if (this.currentChild != this.rootNode) {
+	                this.currentChild = this.currentChild.parentNode;
+	            }				
+			}
+		
+			return this;
         },
-        
-        /*
-         * endId
-         * ends the tag of the first parent with the specified id
-         */
-        endId: function(id){
-            while(this.currentChild.id != id && this.currentChild != this.rootElement) {
-                this.currentChild = this.currentChild.parentElement;
-            }
-        },
-        
-        /*
-         * endTag
-         * ends the tag of the first parent with the specified id
-         */
-        endTag: function(tag) {
-            while(currentChild.id != id && currentChild != rootElement) {
-                currentChild = currentChild.parentElement;
-            }
-        }
+		
+		on: function(evt) {
+			this.currentChild.on(evt, fn)
+			YAHOO.util.Event. addListener(evt, fn);
+		},
+		
+		children: function() {
+			
+			
+		}
     }; //that
 
     autotags = ['div', 'span', 'table', 'tr', 'td', 'a', 'img', 'p', 'pre', 'code', 
