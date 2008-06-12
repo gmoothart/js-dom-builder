@@ -44,7 +44,7 @@ function domBuilder(parent, tagNames) {
 			/*
 			 * close parent by id
 			 */
-			if (prop.id) {
+			if (prop && prop.id) {
 	            while(this.currentChild.id != id && this.currentChild != this.rootNode) {
 	                this.currentChild = this.currentChild.parentNode;
 	            }					
@@ -52,7 +52,7 @@ function domBuilder(parent, tagNames) {
 			/*
 			 * Close parent by tag name
 			 */
-			else if (prop.tag) {
+			else if (prop && prop.tag) {
 	            while(this.currentChild.tagName != prop.tag && this.currentChild != this.rootNode) {
 	                this.currentChild = this.currentChild.parentNode;
 	            }
