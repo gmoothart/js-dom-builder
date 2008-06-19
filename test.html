@@ -17,6 +17,8 @@
     <script type="text/javascript" src="dom-builder.js"></script>
     <script type="text/javascript">
     
+    var Assert = YAHOO.util.Assert;
+	var $get = YAHOO.util.Dom.get;
     var DomBuilderTestCase = new YAHOO.tool.TestCase({
     
         name : "dom-builder tests",
@@ -33,10 +35,7 @@
 			 *     </td>
 			 *   </tr>
 			 * <table>
-			 */
-			var Assert = YAHOO.util.Assert;
-			var $get = YAHOO.util.Dom.get;
-			
+			 */		
 			domBuilder($get('container'))
 	            .table({border: "1"})
 	              .tr()
@@ -47,11 +46,18 @@
 			  .end({tag: 'table'});
 			  
 			Assert.areEqual($get('guid').innerHTML, 'ska ska ska', 'div text is correct')
-			Assert.areEqual($get('container').childNodes[0].tagName, 'TABLE', 'first child node is table');
+			Assert.areEqual($get('container').childNodes[0].tagName.toLowerCase(), 'table', 'first child node is table');
 		},
 		
 		testCustomTagFuncs: function() {
-			Assert.fail('not implemented');
+			domBuilder($get('container'), ['foo', 'bar', 'baz'])
+			  .foo({id: 'arst'})
+			    .bar().end()
+				.baz().end();
+			  
+			Assert.areEqual($get('arst').tagName.toLowerCase(), 'foo');
+			Assert.areEqual($get('arst').childNodes[0].tagName.toLowerCase(), 'bar');
+			Assert.areEqual($get('arst').childNodes[1].tagName.toLowerCase(), 'baz');
 		},
 		
 		testEnd: function() {
