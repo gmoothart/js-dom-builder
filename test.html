@@ -19,6 +19,7 @@
     
     var Assert = YAHOO.util.Assert;
 	var $get = YAHOO.util.Dom.get;
+	var $evt = YAHOO.util.Event;
     var DomBuilderTestCase = new YAHOO.tool.TestCase({
     
         name : "dom-builder tests",
@@ -55,28 +56,62 @@
 			    .bar().end()
 				.baz().end();
 			  
+			Assert.areEqual($get('container').lastChild.id.toLowerCase(), 'arst');
 			Assert.areEqual($get('arst').tagName.toLowerCase(), 'foo');
 			Assert.areEqual($get('arst').childNodes[0].tagName.toLowerCase(), 'bar');
 			Assert.areEqual($get('arst').childNodes[1].tagName.toLowerCase(), 'baz');
 		},
 		
 		testEnd: function() {
-			Assert.fail('not implemented');
+			domBuilder($get('container'))
+			  .div({id:'1'})
+			    .div({id:'2'})
+				  .span({id:'3'}).end()
+				  .span({id:'4'})
+			
+			Assert.areEqual(1, $get('1').childNodes.length);
+			Assert.areEqual(2, $get('2').childNodes.length);
 		},
 		
 		testEndTag: function() {
-			Assert.fail('not implemented');
+			domBuilder($get('container'))
+			  .div({id:'end_test'})
+			    .div({id:'first_nested_div'})
+				    .span()
+					  .a({href: 'www.google.com'})
+			    .end({tag: 'div'})
+				.div({id: 'second_nested_div'});
+				
+			Assert.areEqual('first_nested_div', $get('end_test').childNodes[0].id);
+			Assert.areEqual('second_nested_div', $get('end_test').childNodes[1].id);
 		},
 		
 		testEndId: function() {
-			Assert.fail('not implemented');
+			domBuilder($get('container'))
+			  .div({id:'id_test'})
+			    .div({id:'first_nested_div'})
+				    .span()
+					  .a({href: 'www.google.com'})
+			    .end({id: 'first_nested_div'})
+				.div({id: 'second_nested_div'});
+				
+			Assert.areEqual('first_nested_div', $get('id_test').childNodes[0].id);
+			Assert.areEqual('second_nested_div', $get('id_test').childNodes[1].id);
 		},
 		
 		testOnEvent: function() {
-			Assert.fail('not implemented');
-		},
-		
-		testChildren: function() {
+			domBuilder($get('container'))
+			  .div({id:'evt_test'})
+			    .on('blur', function() {alert('clicked evt_test!');})
+			    .text('here goes');
+
+			var listeners = $evt.getListeners('id_test');
+			Assert.areEqual(1, listeners.length);
+			//http://developer.yahoo.com/yui/docs/Event.js.html
+			//http://developer.yahoo.com/yui/docs/YAHOO.util.Event.html
+			Assert.areEqual('blur', listeners[0].event);
+			
+			$get('id_test')
 			Assert.fail('not implemented');
 		}
 		

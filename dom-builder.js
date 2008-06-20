@@ -16,8 +16,8 @@ function domBuilder(parent, tagNames) {
          * @param {String} tag
          * @param {Object} attributes
          */
-        add: function(tag, attributes) {
-            var el = document.createElement(tag);
+        add: function(tag, attributes) {		
+			var el = document.createElement(tag);
 
             for (name in attributes) {
                 el.setAttribute(name, attributes[name]);
@@ -69,14 +69,9 @@ function domBuilder(parent, tagNames) {
 			return this;
         },
 		
-		on: function(evt) {
-			this.currentChild.on(evt, fn)
-			YAHOO.util.Event. addListener(evt, fn);
-		},
-		
-		children: function() {
-			
-			
+		on: function(evt, fn) {
+			this.currentChild.on(evt, fn);
+			YAHOO.util.Event.addListener(evt, fn);
 		}
     }; //that
 
