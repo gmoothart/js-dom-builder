@@ -8,7 +8,7 @@ function domBuilder(parent, tagNames) {
 
     var that = {
         rootNode: parent,
-        currentChild: parent,
+        currentNode: parent,
         document: parent.document,
         
         /*
@@ -23,8 +23,8 @@ function domBuilder(parent, tagNames) {
                 el.setAttribute(name, attributes[name]);
             }
         
-            this.currentChild.appendChild(el);
-            this.currentChild = el;
+            this.currentNode.appendChild(el);
+            this.currentNode = el;
             return this;
         },
         
@@ -33,7 +33,7 @@ function domBuilder(parent, tagNames) {
          * @param {String} s
          */
         text: function(s) {
-            this.currentChild.innerHTML = s;
+            this.currentNode.innerHTML = s;
             return this;
         },
         
@@ -45,24 +45,30 @@ function domBuilder(parent, tagNames) {
 			 * close parent by id
 			 */
 			if (prop && prop.id) {
-	            while(this.currentChild.id != id && this.currentChild != this.rootNode) {
-	                this.currentChild = this.currentChild.parentNode;
-	            }					
+				//find the node we need to close
+	            while(this.currentNode.id !== prop.id && this.currentNode.parentNode !== this.rootNode) {
+	                this.currentNode = this.currentNode.parentNode;
+	            }
+				
+				//set the current node to its parent to 'close' it
+				this.currentNode = this.currentNode.parentNode;
+				
 			}
 			/*
 			 * Close parent by tag name
 			 */
 			else if (prop && prop.tag) {
-	            while(this.currentChild.tagName != prop.tag && this.currentChild != this.rootNode) {
-	                this.currentChild = this.currentChild.parentNode;
+	            while(this.currentNode.tagName.toLowerCase() !== prop.tag.toLowerCase() && this.currentNode.parentNode !== this.rootNode) {
+	                this.currentNode = this.currentNode.parentNode;
 	            }
+				this.currentNode = this.currentNode.parentNode;
 			}
 			/*
 			 * Close first parent
 			 */
 			else {
-	            if (this.currentChild != this.rootNode) {
-	                this.currentChild = this.currentChild.parentNode;
+	            if (this.currentNode !== this.rootNode) {
+	                this.currentNode = this.currentNode.parentNode;
 	            }				
 			}
 		
@@ -70,13 +76,13 @@ function domBuilder(parent, tagNames) {
         },
 		
 		on: function(evt, fn) {
-			this.currentChild.on(evt, fn);
-			YAHOO.util.Event.addListener(evt, fn);
+			YAHOO.util.Event.addListener(this.currentNode, evt, fn);
+			return this;
 		}
     }; //that
 
     autotags = ['div', 'span', 'table', 'tr', 'td', 'a', 'img', 'p', 'pre', 'code', 
-                'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+                'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'input'];
     if (tagNames && tagNames.length > 0) {
         autotags = autotags.concat(tagNames);
     }
@@ -88,9 +94,7 @@ function domBuilder(parent, tagNames) {
         if (!that[tag]) {
 
             (function() {
-                //need extra function and var to capture the current value of tag. 
-                // Otherwise, this function would always be executed with the last item in 
-                //  autotags, b/c of how closures wothrow                    
+                //need extra function and var to capture the current value of tag, b/c of closures.
                 var t = tag;
                 that[t] = function(attributes) {
                     return that.add(t, attributes);

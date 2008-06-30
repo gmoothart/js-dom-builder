@@ -99,50 +99,28 @@
 			Assert.areEqual('second_nested_div', $get('id_test').childNodes[1].id);
 		},
 		
+		testInvalidEnd_shouldSetRootToCurrentNode: function() {
+			var builder = domBuilder($get('container'))
+				.div({id: 'invalid_end_test'})
+				.end({id: 'fhqwhgads'});
+				
+			Assert.areEqual($get('container'), builder.currentNode);
+		},
+		
 		testOnEvent: function() {
 			domBuilder($get('container'))
-			  .div({id:'evt_test'})
-			    .on('blur', function() {alert('clicked evt_test!');})
-			    .text('here goes');
+			  .input({id:'evt_test', type: 'text'})
+			    .on('blur', function() {alert('blur!!');})
+				.on('focus', function() {alert('focus!')})
 
-			var listeners = $evt.getListeners('id_test');
-			Assert.areEqual(1, listeners.length);
+			var listeners = $evt.getListeners('evt_test');
+			Assert.areEqual(2, listeners.length);
 			//http://developer.yahoo.com/yui/docs/Event.js.html
 			//http://developer.yahoo.com/yui/docs/YAHOO.util.Event.html
-			Assert.areEqual('blur', listeners[0].event);
-			
-			$get('id_test')
-			Assert.fail('not implemented');
+			Assert.areEqual('blur', listeners[0].type);
+			Assert.areEqual('focus', listeners[1].type);
 		}
 		
-        //---------------------------------------------------------------------
-        // Test methods - names must begin with "test"
-        //---------------------------------------------------------------------
-		/*        
-        testName : function () {
-            var Assert = YAHOO.util.Assert;
-            
-            Assert.isObject(this.data);
-            Assert.isString(this.data.name);
-            Assert.areEqual("yuitest", this.data.name);            
-        },
-        
-        testYear : function () {
-            var Assert = YAHOO.util.Assert;
-            
-            Assert.isObject(this.data);
-            Assert.isNumber(this.data.year);
-            Assert.areEqual(2007, this.data.year);            
-        },
-        
-        testBeta : function () {
-            var Assert = YAHOO.util.Assert;
-            
-            Assert.isObject(this.data);
-            Assert.isBoolean(this.data.beta);
-            Assert.isTrue(this.data.beta);
-        }
-    	*/
     });
      
     YAHOO.util.Event.onDOMReady(function (){
