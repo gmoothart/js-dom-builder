@@ -108,7 +108,7 @@
             domBuilder($get('container'))
               .input({id:'evt_test', type: 'text'})
                 .on('blur', function() {alert('blur!!');})
-              .on('focus', function() {alert('focus!')})
+                .on('focus', function() {alert('focus!')})
 
             var listeners = $evt.getListeners('evt_test');
             Assert.areEqual(2, listeners.length);

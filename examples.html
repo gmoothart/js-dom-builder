@@ -3,25 +3,23 @@
   <script type="text/javascript" src="http://yui.yahooapis.com/2.5.2/build/yahoo-dom-event/yahoo-dom-event.js"></script>
   <script type="text/javascript" src="dom-builder.js"></script>
   <script type="text/javascript">
-      //YAHOO.util.Event.onDOMReady(
-      var f= function (){
+      YAHOO.util.Event.onDOMReady(function (){
         var $get = YAHOO.util.Dom.get;
           
         //basic example
-        domBuilder($get('test'))
-          .table({id: 'table1', style: 'border-style:solid;border-width:4px;'})
-            .tr()
-              .td().text('brown').end()
-              .td().text('purple').end()
-            .end()
-            .tr()
-              .td().text('bear').end()
-              .td().text('cat').end();
-          //.end({tag: 'table'})
-          //.br();
+        domBuilder($get('basic'))
+        .div({id: 'div1', style: 'border-style:solid;border-width:4px;padding:5px;'})
+          .div({style: 'float: left;' })
+            .span().text('brown').end()
+            .span().text('purple').end()
+            .a({href: 'http://www.google.com'}).text('google').end()
+          .end()
+          .div({style: 'float: right;' })
+            .span().text('bear').end()
+            .span().text('cat').end();
             
         //event handling
-        domBuilder($get('test'))
+        domBuilder($get('event'))
           .div()
             .span().text('some text').end()
              .input({id:'evt_test', type: 'text'})
@@ -30,7 +28,7 @@
              .end();   
       
         //custom tags
-        domBuilder($get('test'), ['select', 'optgroup', 'option'])
+        domBuilder($get('custom'), ['select', 'optgroup', 'option'])
         .select({id: 'select_test'})
           .optgroup({label: 'swedish cars'})
             .option({value: 'v'}).text('Volvo').end()
@@ -41,10 +39,12 @@
             .option({value: 'm'}).text('Mercedes').end()
             .option({value: 'a'}).text('Audi').end()
           .end();
-    }//);
+    });
   </script>
 </head>
-<body onload="f">
-  <div id="test"></div>
+<body>
+  <div id="basic"></div>
+  <div id="event"></div>
+  <div id="custom"></div>
 </body>
 </html>
