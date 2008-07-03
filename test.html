@@ -96,7 +96,7 @@
             Assert.areEqual('second_nested_div', $get('id_test').childNodes[1].id);
         },
     
-        testInvalidEnd_shouldSetRootToCurrentNode: function() {
+        testInvalidEnd_shouldSetCurrentNodeToRoot: function() {
             var builder = domBuilder($get('container'))
               .div({id: 'invalid_end_test'})
               .end({id: 'fhqwhgads'});
