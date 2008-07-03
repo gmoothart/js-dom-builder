@@ -17,7 +17,7 @@ function domBuilder(parent, tagNames) {
          * @param {Object} attributes
          */
         add: function(tag, attributes) {		
-			var el = document.createElement(tag);
+            var el = document.createElement(tag);
 
             for (name in attributes) {
                 el.setAttribute(name, attributes[name]);
@@ -41,44 +41,44 @@ function domBuilder(parent, tagNames) {
          * end
          */
         end: function(prop) {
-			/*
-			 * close parent by id
-			 */
-			if (prop && prop.id) {
-				//find the node we need to close
-	            while(this.currentNode.id !== prop.id && this.currentNode.parentNode !== this.rootNode) {
-	                this.currentNode = this.currentNode.parentNode;
-	            }
-				
-				//set the current node to its parent to 'close' it
-				this.currentNode = this.currentNode.parentNode;
-				
-			}
-			/*
-			 * Close parent by tag name
-			 */
-			else if (prop && prop.tag) {
-	            while(this.currentNode.tagName.toLowerCase() !== prop.tag.toLowerCase() && this.currentNode.parentNode !== this.rootNode) {
-	                this.currentNode = this.currentNode.parentNode;
-	            }
-				this.currentNode = this.currentNode.parentNode;
-			}
-			/*
-			 * Close first parent
-			 */
-			else {
-	            if (this.currentNode !== this.rootNode) {
-	                this.currentNode = this.currentNode.parentNode;
-	            }				
-			}
-		
-			return this;
+            /*
+             * close parent by id
+             */
+            if (prop && prop.id) {
+                //find the node we need to close
+                while(this.currentNode.id !== prop.id && this.currentNode.parentNode !== this.rootNode) {
+                    this.currentNode = this.currentNode.parentNode;
+                }
+                
+                //set the current node to its parent to 'close' it
+                this.currentNode = this.currentNode.parentNode;
+                
+            }
+            /*
+             * Close parent by tag name
+             */
+            else if (prop && prop.tag) {
+                while(this.currentNode.tagName.toLowerCase() !== prop.tag.toLowerCase() && this.currentNode.parentNode !== this.rootNode) {
+                    this.currentNode = this.currentNode.parentNode;
+                }
+                this.currentNode = this.currentNode.parentNode;
+            }
+            /*
+             * Close first parent
+             */
+            else {
+                if (this.currentNode !== this.rootNode) {
+                    this.currentNode = this.currentNode.parentNode;
+                }
+            }
+        
+            return this;
         },
-		
-		on: function(evt, fn) {
-			YAHOO.util.Event.addListener(this.currentNode, evt, fn);
-			return this;
-		}
+        
+        on: function(evt, fn) {
+            YAHOO.util.Event.addListener(this.currentNode, evt, fn);
+            return this;
+        }
     }; //that
 
     autotags = ['div', 'span', 'table', 'tr', 'td', 'a', 'img', 'p', 'pre', 'code', 
@@ -105,178 +105,3 @@ function domBuilder(parent, tagNames) {
     
     return that;
 }
-
-/*
-    domCreate
-    
-    usage:
-    
-    var node = domCreate({
-      tag: div
-      id: ska
-      style: "width: 15px;"
-      children: [
-        { tag: a, href: arst },
-        { tag: div
-          id: arst
-          children: []
-        }
-      ]
-    });
-    
-    
-    var node = domCreate({     
-      div: {
-        id: ska
-        style: "width: 15px;"
-        children:
-        [
-          { div: {
-             id: arst,
-             class: ska,
-             text: "ska never dies!"
-             children: [
-              { a: { href: } }
-            ]
-          } }
-        ]
-      }
-    });
-
-
-<table>
-  <tr>
-    <td>sass</td>
-    <td>
-      <div id="guid> ska ever dies</div>
-    </td>
-  </tr>
-</table>
-
-    var table = domCreate({
-      table: {
-    chiltren: [
-      tr: {
-        children: [
-          td: { text: sass! }
-          td: {
-        children: [
-          div: {
-            id: "guid"
-            text = " ska never dies"
-
-          }
-        ]
-          }
-        ]
-
-      }
-    ]
-      }
-    });
-
-var table = domCreate({
-  table: [
-    tr: [
-      { td: "sass" }
-      { td: {
-    div: {
-          id: "guid"
-      text: " ska never dies"
-    }
-      } }
-    ]
-  ]
-});
-
-var table = new DomNode()
-
-table.id = "eh"
-table.
-  td().
-    id("id3").
-    tr().
-
-
-<table>
-  <tr>
-    <td>sass</td>
-    <td>
-      <div id="guid> ska ever dies</div>
-    </td>
-  </tr>
-</table>
-
-
-var table = new DomTree('table', { id: ska });
-table
-  .add('tr', {})
-    .add('td').text('sass')
-    .add('td')
-      .add('div' {id: 'guid'}).text('ska never dies')
-
-var node = DomTree(parent);
-node
-  .table({ id: ska })
-    .tr()
-      .td().text('sass')
-      .td()
-        .div({id: 'guid'}).text('ska never dies')
-          .div()
-        .text('')
-      .end()
-        .endId('guid')
-        .div()
-    .endTag('tr')
-    .tr()
-      .td().text('arst')
-      .td()
-        .div({id: 'ska'}).text('arst')
-
-
-//recursive, functional style:
-var node = DomTree(parent);
-node.add(
-  node.table({id: ska},
-    node.tr(
-      node.td( node.text('sass') ),
-      node.td(
-    node.div({id: 'guid'}, 
-      node.text('ska never dies'),
-      node.div( node.text('') )
-        )
-      ) 
-    ), 
-    node.tr(
-      node.td(
-    node.text('arst')
-      ),
-      node.td(
-        node.div({id: 'ska'}, node.text('arst'))
-      )
-    )
-  )
-);    
-*/
-
-
-
-/*
-function domTree2(parent)
-{
-  that = {
-    rootNode: parent;
-    add: function(tag) {
-    
-      return []
-    }
-
-    text: function(s) {
-    return s;
-    }
-
-  }
-
-  return that
-}
-*/

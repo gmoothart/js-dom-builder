@@ -1,25 +1,22 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <title>Test Dom Builder</title>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Test Dom Builder</title>
+  <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.2/build/logger/assets/logger.css">
+  <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.2/build/yuitest/assets/testlogger.css">
+  
+  <!-- used by dom-builder -->
+  <script type="text/javascript" src="http://yui.yahooapis.com/2.5.2/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+  <!-- YUI test suite -->
+  <script type="text/javascript" src="http://yui.yahooapis.com/2.5.2/build/logger/logger-min.js"></script>
+  <script type="text/javascript" src="http://yui.yahooapis.com/2.5.2/build/yuitest/yuitest-min.js"></script>
+  <script type="text/javascript" src="dom-builder.js"></script>
+  <script type="text/javascript">
 
-	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.2/build/logger/assets/logger.css"> 
-	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.2/build/yuitest/assets/testlogger.css"> 
-	 
-	<!-- used by dom-builder -->
-	<script type="text/javascript" src="http://yui.yahooapis.com/2.5.2/build/yahoo-dom-event/yahoo-dom-event.js"></script> 
-
-	<!-- YUI test suite --> 
-	<script type="text/javascript" src="http://yui.yahooapis.com/2.5.2/build/logger/logger-min.js"></script> 
-	<script type="text/javascript" src="http://yui.yahooapis.com/2.5.2/build/yuitest/yuitest-min.js"></script> 	
-	
-    <script type="text/javascript" src="dom-builder.js"></script>
-    <script type="text/javascript">
-    
     var Assert = YAHOO.util.Assert;
-	var $get = YAHOO.util.Dom.get;
-	var $evt = YAHOO.util.Event;
+    var $get = YAHOO.util.Dom.get;
+    var $evt = YAHOO.util.Event;
     var DomBuilderTestCase = new YAHOO.tool.TestCase({
     
         name : "dom-builder tests",
@@ -27,101 +24,101 @@
         //---------------------------------------------------------------------
         // setUp and tearDown methods - optional
         //---------------------------------------------------------------------
-		testBasicDom: function() {
-			/* <table>
-			 *   <tr>
-			 *     <td>sass</td>
-			 *     <td>
-			 *       <div id="guid">ska ska ska</div>
-			 *     </td>
-			 *   </tr>
-			 * <table>
-			 */		
-			domBuilder($get('container'))
-	            .table({border: "1"})
-	              .tr()
-	                .td().text('sass').end()
-	                .td()
-	                    .div( {id: 'guid'}).text('ska ska ska')
-				  .end({tag: 'tr'})
-			  .end({tag: 'table'});
-			  
-			Assert.areEqual($get('guid').innerHTML, 'ska ska ska', 'div text is correct')
-			Assert.areEqual($get('container').childNodes[0].tagName.toLowerCase(), 'table', 'first child node is table');
-		},
-		
-		testCustomTagFuncs: function() {
-			domBuilder($get('container'), ['foo', 'bar', 'baz'])
-			  .foo({id: 'arst'})
-			    .bar().end()
-				.baz().end();
-			  
-			Assert.areEqual($get('container').lastChild.id.toLowerCase(), 'arst');
-			Assert.areEqual($get('arst').tagName.toLowerCase(), 'foo');
-			Assert.areEqual($get('arst').childNodes[0].tagName.toLowerCase(), 'bar');
-			Assert.areEqual($get('arst').childNodes[1].tagName.toLowerCase(), 'baz');
-		},
-		
-		testEnd: function() {
-			domBuilder($get('container'))
-			  .div({id:'1'})
-			    .div({id:'2'})
-				  .span({id:'3'}).end()
-				  .span({id:'4'})
-			
-			Assert.areEqual(1, $get('1').childNodes.length);
-			Assert.areEqual(2, $get('2').childNodes.length);
-		},
-		
-		testEndTag: function() {
-			domBuilder($get('container'))
-			  .div({id:'end_test'})
-			    .div({id:'first_nested_div'})
-				    .span()
-					  .a({href: 'www.google.com'})
-			    .end({tag: 'div'})
-				.div({id: 'second_nested_div'});
-				
-			Assert.areEqual('first_nested_div', $get('end_test').childNodes[0].id);
-			Assert.areEqual('second_nested_div', $get('end_test').childNodes[1].id);
-		},
-		
-		testEndId: function() {
-			domBuilder($get('container'))
-			  .div({id:'id_test'})
-			    .div({id:'first_nested_div'})
-				    .span()
-					  .a({href: 'www.google.com'})
-			    .end({id: 'first_nested_div'})
-				.div({id: 'second_nested_div'});
-				
-			Assert.areEqual('first_nested_div', $get('id_test').childNodes[0].id);
-			Assert.areEqual('second_nested_div', $get('id_test').childNodes[1].id);
-		},
-		
-		testInvalidEnd_shouldSetRootToCurrentNode: function() {
-			var builder = domBuilder($get('container'))
-				.div({id: 'invalid_end_test'})
-				.end({id: 'fhqwhgads'});
-				
-			Assert.areEqual($get('container'), builder.currentNode);
-		},
-		
-		testOnEvent: function() {
-			domBuilder($get('container'))
-			  .input({id:'evt_test', type: 'text'})
-			    .on('blur', function() {alert('blur!!');})
-				.on('focus', function() {alert('focus!')})
+        testBasicDom: function() {
+            /* <table>
+             *   <tr>
+             *     <td>sass</td>
+             *     <td>
+             *       <div id="guid">ska ska ska</div>
+             *     </td>
+             *   </tr>
+             * <table>
+             */
+            domBuilder($get('container'))
+                .table({border: "1"})
+                  .tr()
+                    .td().text('sass').end()
+                      .td()
+                        .div( {id: 'guid'}).text('ska ska ska')
+                  .end({tag: 'tr'})
+                .end({tag: 'table'});
+                
+            Assert.areEqual($get('guid').innerHTML, 'ska ska ska', 'div text is correct')
+            Assert.areEqual($get('container').childNodes[0].tagName.toLowerCase(), 'table', 'first child node is table');
+        },
+    
+        testCustomTagFuncs: function() {
+            domBuilder($get('container'), ['foo', 'bar', 'baz'])
+              .foo({id: 'arst'})
+                .bar().end()
+              .baz().end();
+              
+            Assert.areEqual($get('container').lastChild.id.toLowerCase(), 'arst');
+            Assert.areEqual($get('arst').tagName.toLowerCase(), 'foo');
+            Assert.areEqual($get('arst').childNodes[0].tagName.toLowerCase(), 'bar');
+            Assert.areEqual($get('arst').childNodes[1].tagName.toLowerCase(), 'baz');
+        },
+    
+        testEnd: function() {
+            domBuilder($get('container'))
+              .div({id:'1'})
+                .div({id:'2'})
+                .span({id:'3'}).end()
+                .span({id:'4'})
+            
+            Assert.areEqual(1, $get('1').childNodes.length);
+            Assert.areEqual(2, $get('2').childNodes.length);
+        },
+    
+        testEndTag: function() {
+            domBuilder($get('container'))
+              .div({id:'end_test'})
+                .div({id:'first_nested_div'})
+                  .span()
+                  .a({href: 'www.google.com'})
+                .end({tag: 'div'})
+              .div({id: 'second_nested_div'});
+              
+            Assert.areEqual('first_nested_div', $get('end_test').childNodes[0].id);
+            Assert.areEqual('second_nested_div', $get('end_test').childNodes[1].id);
+        },
+    
+        testEndId: function() {
+            domBuilder($get('container'))
+              .div({id:'id_test'})
+                .div({id:'first_nested_div'})
+                  .span()
+                  .a({href: 'www.google.com'})
+                .end({id: 'first_nested_div'})
+              .div({id: 'second_nested_div'});
+              
+            Assert.areEqual('first_nested_div', $get('id_test').childNodes[0].id);
+            Assert.areEqual('second_nested_div', $get('id_test').childNodes[1].id);
+        },
+    
+        testInvalidEnd_shouldSetRootToCurrentNode: function() {
+            var builder = domBuilder($get('container'))
+              .div({id: 'invalid_end_test'})
+              .end({id: 'fhqwhgads'});
+              
+            Assert.areEqual($get('container'), builder.currentNode);
+        },
 
-			var listeners = $evt.getListeners('evt_test');
-			Assert.areEqual(2, listeners.length);
-			//http://developer.yahoo.com/yui/docs/Event.js.html
-			//http://developer.yahoo.com/yui/docs/YAHOO.util.Event.html
-			Assert.areEqual('blur', listeners[0].type);
-			Assert.areEqual('focus', listeners[1].type);
-		}
-		
-    });
+        testOnEvent: function() {
+            domBuilder($get('container'))
+              .input({id:'evt_test', type: 'text'})
+                .on('blur', function() {alert('blur!!');})
+              .on('focus', function() {alert('focus!')})
+
+            var listeners = $evt.getListeners('evt_test');
+            Assert.areEqual(2, listeners.length);
+            //http://developer.yahoo.com/yui/docs/Event.js.html
+            //http://developer.yahoo.com/yui/docs/YAHOO.util.Event.html
+            Assert.areEqual('blur', listeners[0].type);
+            Assert.areEqual('focus', listeners[1].type);
+        }
+    
+    }); //DomBuilderTestCase
      
     YAHOO.util.Event.onDOMReady(function (){
         //create the logger
@@ -131,37 +128,13 @@
         //run the tests
         YAHOO.tool.TestRunner.run();
     });
-		
-		
-      /*
-       * Example:
-       * <div id="div1" style="width: 100%">
-         <div style="border: 5px;">
-          <span>chunky</span>
-          <span>bacon</span>
-         </div>
-         <div>
-          google: 
-          <a href="http://www.google.com" id="goo-link">Google</a>
-         </div>
-        </div>
-       * 
-       * 
-       */
-	  /*
-      function test() {
-        domBuilder(YAHOO.util.Dom.get('container'))
-            .table()
-              .tr()
-                .td().text('sass')
-                .td()
-                    .div( {id: 'guid'}).text('ska never dies')
-        }
-      */
-    </script>
-  </head>
-  <body>
-    <div id="testLogger" style="float:left;"></div>	
-    <div id="container" style="float:right;"></div>	
-  </body>
+  </script>
+
+</head>
+<body>
+  <div id="testLogger" style="float: left;">
+  </div>
+  <div id="container" style="float: right;">
+  </div>
+</body>
 </html>
