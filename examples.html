@@ -8,16 +8,15 @@
           
         //basic example
         domBuilder($get('basic'))
-        .div({id: 'div1', style: 'border-style:solid;border-width:4px;padding:5px;'})
+        .div({id: 'div1', style: 'height:50px;border-style:solid;border-width:4px;padding:1px;'})
           .div({style: 'float: left;' })
-            .span().text('brown').end()
-            .span().text('purple').end()
+            .span().text('purple, ').end()
             .a({href: 'http://www.google.com'}).text('google').end()
           .end()
           .div({style: 'float: right;' })
-            .span().text('bear').end()
-            .span().text('cat').end();
-            
+            .span().text('cat').end()
+          .end();
+        
         //event handling
         domBuilder($get('event'))
           .div()
