@@ -11,12 +11,18 @@
   <!-- YUI test suite -->
   <script type="text/javascript" src="http://yui.yahooapis.com/2.5.2/build/logger/logger-min.js"></script>
   <script type="text/javascript" src="http://yui.yahooapis.com/2.5.2/build/yuitest/yuitest-min.js"></script>
+  <script type="text/javascript" src="http://yui.yahooapis.com/2.5.2/build/yuitest/yuitest-min.js"></script>
+  
+  <script src="http://yui.yahooapis.com/2.5.2/build/selector/selector-beta-min.js"></script> 
   <script type="text/javascript" src="dom-builder.js"></script>
+  <script type="text/javascript" src="yui-functional.js"></script>
   <script type="text/javascript">
 
     var Assert = YAHOO.util.Assert;
     var $get = YAHOO.util.Dom.get;
     var $evt = YAHOO.util.Event;
+    var $q = YAHOO.util.Selector.query;
+    var $yf = YAHOO.util.Functional;
     var DomBuilderTestCase = new YAHOO.tool.TestCase({
     
         name : "dom-builder tests",
@@ -116,6 +122,73 @@
             //http://developer.yahoo.com/yui/docs/YAHOO.util.Event.html
             Assert.areEqual('blur', listeners[0].type);
             Assert.areEqual('focus', listeners[1].type);
+        },
+        
+        testStringIdAsRoot: function() {
+          domBuilder('container')
+            .div()
+              .span({id: 'stringIdAsRoot'}).text('container text').end();
+          
+          var el = $q('#container div #stringIdAsRoot')
+          
+          Assert.isNotNull(el);
+          Assert.areEqual('container test', el.innerHTML);
+        }
+        
+        testEachWithFunctionSyntax: function() {
+          var comments = [
+          {cid: 1, cname: 'bob', ctext: 'dumb comment'},
+          {cid: 2, cname: 'jeff', ctext: 'another comment'},
+          {cid: 3, cname: 'Steve', ctext: 'asdf'},
+          {cid: 4, cname: 'John', ctext: 'eh??'},
+          {cid: 5, cname: 'George', ctext: 'qwerty'},
+          ]
+                
+          
+          /*
+          Implementation musings...
+            * each needs to store the collection in a state var
+            * the tag calls below each() may need to operate on a collection
+              of current nodes: li() creates n children of ul. But div() needs
+              to create 1 child on each of the new li nodes. each() could create
+              an array of n references to its parent (ul), for more consistency?
+            * end() needs to clean up the collection reference when its call
+              matches the each(). When matching an element inside of each(),
+              it needs to close all target elements.
+            * Hm... this is kind of like walking a tree. Can we keep track of
+              our progress that way? Like a BFS... at each step we'd close
+              the tags open at that level?
+            * A non-markup tag like each() still poses a problem... how to end()
+              it?
+            * an elegant solution would allow nested each()s. Maybe using a stack
+              of contexts? Would recursion be helpful?
+          */
+          
+          
+          domBuilder('container')
+            .ul({id: 'addRangeTest'})
+              .each(comments)
+                .li(function(item) { return { id: item.cid; } })
+                  .div({ class: 'head' })
+                    .text(function(item) { return { item.cname; } })
+                  .end()
+                  .div({ class: 'text' })
+                    .text(function(item) { return { item.ctext; } })
+                  .end()
+              .end()
+            .end()
+            
+          //assert that everything went ok
+          var els = $q('#addRangeTest ul li');
+            for (var i=0; i < els.length(); i++) {
+              var li = els[i];
+              var c = comments[i];
+            }               
+          });
+        }
+        
+        testEachWithStringSyntax: function() {
+                
         }
     
     }); //DomBuilderTestCase
