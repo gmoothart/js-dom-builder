@@ -22,7 +22,7 @@ function domBuilder(parent, tagNames) {
          * @param {Object|Function} attributes
          */
         add: function(tag, attributes) {		
-            if (YAHOO.lang.isFunction(attributes) {
+            if (YAHOO.lang.isFunction(attributes)) {
               attributes = attributes();               
             }
             
@@ -41,11 +41,11 @@ function domBuilder(parent, tagNames) {
          * @param {String|Function} s
          */
         text: function(s) {
-            if (YAHOO.lang.isFunction(s) {
+            if (YAHOO.lang.isFunction(s)) {
               s = s();               
             }
             
-            if (!YAHOO.lang.isString(s)) raise 'argument to text() must be a string or a function that returns a string!'
+            if (!YAHOO.lang.isString(s)) throw 'argument to text() must be a string or a function that returns a string!';
                 
             this.currentNode.innerHTML = s;
             return this;
@@ -72,6 +72,7 @@ function domBuilder(parent, tagNames) {
                 this.currentNode = this.currentNode.parentNode;
                 
             }
+            
             /*
              * Close parent by tag name
              */
