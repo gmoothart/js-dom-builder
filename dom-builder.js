@@ -4,21 +4,29 @@
   @param {Array} tagNames
 */
 function domBuilder(parent, tagNames) {
-    //typecheck: parent must be assigned and a valid dom node!
+    var $get = YAHOO.util.Dom.get;
+    var parent_el = $get(parent);
+    
+    
+    //private state variables
+    var context_stack;
 
     var that = {
-        rootNode: parent,
-        currentNode: parent,
-        document: parent.document,
+        rootNode: parent_el,
+        currentNode: parent_el,
+        document: parent_el.document,
         
         /*
          * add
          * @param {String} tag
-         * @param {Object} attributes
+         * @param {Object|Function} attributes
          */
         add: function(tag, attributes) {		
+            if (YAHOO.lang.isFunction(attributes) {
+              attributes = attributes();               
+            }
+            
             var el = document.createElement(tag);
-
             for (name in attributes) {
                 el.setAttribute(name, attributes[name]);
             }
@@ -30,9 +38,15 @@ function domBuilder(parent, tagNames) {
         
         /*
          * text
-         * @param {String} s
+         * @param {String|Function} s
          */
         text: function(s) {
+            if (YAHOO.lang.isFunction(s) {
+              s = s();               
+            }
+            
+            if (!YAHOO.lang.isString(s)) raise 'argument to text() must be a string or a function that returns a string!'
+                
             this.currentNode.innerHTML = s;
             return this;
         },
@@ -41,6 +55,10 @@ function domBuilder(parent, tagNames) {
          * end
          */
         end: function(prop) {
+            if (YAHOO.lang.isFunction(prop)) {
+                prop = prop();       
+            }
+              
             /*
              * close parent by id
              */
@@ -78,6 +96,10 @@ function domBuilder(parent, tagNames) {
         on: function(evt, fn) {
             YAHOO.util.Event.addListener(this.currentNode, evt, fn);
             return this;
+        }
+        
+        each: function(collection) {
+                 
         }
     }; //that
 
