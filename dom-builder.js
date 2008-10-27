@@ -97,7 +97,7 @@ function domBuilder(parent, tagNames) {
         on: function(evt, fn) {
             YAHOO.util.Event.addListener(this.currentNode, evt, fn);
             return this;
-        }
+        },
         
         each: function(collection) {
                  

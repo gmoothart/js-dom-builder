@@ -133,7 +133,7 @@
           
           Assert.isNotNull(el);
           Assert.areEqual('container test', el.innerHTML);
-        }
+        },
         
         testEachWithFunctionSyntax: function() {
           var comments = [
@@ -141,7 +141,7 @@
           {cid: 2, cname: 'jeff', ctext: 'another comment'},
           {cid: 3, cname: 'Steve', ctext: 'asdf'},
           {cid: 4, cname: 'John', ctext: 'eh??'},
-          {cid: 5, cname: 'George', ctext: 'qwerty'},
+          {cid: 5, cname: 'George', ctext: 'qwerty'}
           ]
                 
           
@@ -168,24 +168,23 @@
           domBuilder('container')
             .ul({id: 'addRangeTest'})
               .each(comments)
-                .li(function(item) { return { id: item.cid; } })
+                .li(function(item) { return { id: item.cid }; })
                   .div({ class: 'head' })
-                    .text(function(item) { return { item.cname; } })
+                    .text(function(item) { return item.cname; })
                   .end()
                   .div({ class: 'text' })
-                    .text(function(item) { return { item.ctext; } })
+                    .text(function(item) { return item.ctext; })
                   .end()
               .end()
-            .end()
+            .end();
             
           //assert that everything went ok
           var els = $q('#addRangeTest ul li');
-            for (var i=0; i < els.length(); i++) {
+          for (var i=0; i < els.length(); i++) {
               var li = els[i];
               var c = comments[i];
-            }               
-          });
-        }
+          }
+        },
         
         testEachWithStringSyntax: function() {
                 
