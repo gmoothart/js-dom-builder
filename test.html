@@ -44,13 +44,14 @@
                 .table({border: "1"})
                   .tr()
                     .td().text('sass').end()
-                      .td()
-                        .div( {id: 'guid'}).text('ska ska ska')
-                  .end({tag: 'tr'})
-                .end({tag: 'table'});
-                
+                    .td()
+                      .div( {id: 'guid'}).text('ska ska ska').end()
+                    .end()
+                  .end()
+                .end();
+
             Assert.areEqual($get('guid').innerHTML, 'ska ska ska', 'div text is correct')
-            Assert.areEqual($get('container').childNodes[0].tagName.toLowerCase(), 'table', 'first child node is table');
+            Assert.areEqual($q('#container > table')[0].tagName.toLowerCase(), 'table', 'first child node is table');
         },
     
         testCustomTagFuncs: function() {
@@ -77,18 +78,20 @@
         },
     
         testEndTag: function() {
-            domBuilder($get('container'))
+            domBuilder('container')
               .div({id:'end_test'})
                 .div({id:'first_nested_div'})
                   .span()
-                  .a({href: 'www.google.com'})
-                .end({tag: 'div'})
-              .div({id: 'second_nested_div'});
+                    .a({href: 'www.google.com'}).end()
+                  .end()
+                .end()
+                .div({id: 'second_nested_div'});
               
-            Assert.areEqual('first_nested_div', $get('end_test').childNodes[0].id);
-            Assert.areEqual('second_nested_div', $get('end_test').childNodes[1].id);
+            Assert.areEqual('first_nested_div', $q('#end_test > div')[0].id);
+            Assert.areEqual('second_nested_div', $q('#end_test > div')[1].id);
         },
     
+        /* Feature removed to simplify code and it was dumb anyway.
         testEndId: function() {
             domBuilder($get('container'))
               .div({id:'id_test'})
@@ -101,11 +104,12 @@
             Assert.areEqual('first_nested_div', $get('id_test').childNodes[0].id);
             Assert.areEqual('second_nested_div', $get('id_test').childNodes[1].id);
         },
+        */
     
         testInvalidEnd_shouldSetCurrentNodeToRoot: function() {
             var builder = domBuilder($get('container'))
               .div({id: 'invalid_end_test'})
-              .end({id: 'fhqwhgads'});
+              .end().end();
               
             Assert.areEqual($get('container'), builder.currentNode);
         },
@@ -127,9 +131,9 @@
         testStringIdAsRoot: function() {
           domBuilder('container')
             .div()
-              .span({id: 'stringIdAsRoot'}).text('container text').end();
+              .span({id: 'stringIdAsRoot'}).text('container test').end();
           
-          var el = $q('#container div #stringIdAsRoot')
+          var el = $q('#container div #stringIdAsRoot')[0];
           
           Assert.isNotNull(el);
           Assert.areEqual('container test', el.innerHTML);
@@ -137,32 +141,12 @@
         
         testEachWithFunctionSyntax: function() {
           var comments = [
-          {cid: 1, cname: 'bob', ctext: 'dumb comment'},
-          {cid: 2, cname: 'jeff', ctext: 'another comment'},
-          {cid: 3, cname: 'Steve', ctext: 'asdf'},
-          {cid: 4, cname: 'John', ctext: 'eh??'},
-          {cid: 5, cname: 'George', ctext: 'qwerty'}
+            {cid: 1, cname: 'bob', ctext: 'dumb comment'},
+            {cid: 2, cname: 'jeff', ctext: 'another comment'},
+            {cid: 3, cname: 'Steve', ctext: 'asdf'},
+            {cid: 4, cname: 'John', ctext: 'eh??'},
+            {cid: 5, cname: 'George', ctext: 'qwerty'}
           ]
-                
-          
-          /*
-          Implementation musings...
-            * each needs to store the collection in a state var
-            * the tag calls below each() may need to operate on a collection
-              of current nodes: li() creates n children of ul. But div() needs
-              to create 1 child on each of the new li nodes. each() could create
-              an array of n references to its parent (ul), for more consistency?
-            * end() needs to clean up the collection reference when its call
-              matches the each(). When matching an element inside of each(),
-              it needs to close all target elements.
-            * Hm... this is kind of like walking a tree. Can we keep track of
-              our progress that way? Like a BFS... at each step we'd close
-              the tags open at that level?
-            * A non-markup tag like each() still poses a problem... how to end()
-              it?
-            * an elegant solution would allow nested each()s. Maybe using a stack
-              of contexts? Would recursion be helpful?
-          */
           
           
           domBuilder('container')
@@ -187,7 +171,7 @@
         },
         
         testEachWithStringSyntax: function() {
-                
+            Assert.fail();    
         }
     
     }); //DomBuilderTestCase

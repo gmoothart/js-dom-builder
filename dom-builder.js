@@ -9,7 +9,7 @@ function domBuilder(parent, tagNames) {
     
     
     //private state variables
-    var context_stack;
+    var context_stack = [];
 
     var that = {
         rootNode: parent_el,
@@ -54,43 +54,13 @@ function domBuilder(parent, tagNames) {
         /*
          * end
          */
-        end: function(prop) {
-            if (YAHOO.lang.isFunction(prop)) {
-                prop = prop();       
-            }
-              
-            /*
-             * close parent by id
-             */
-            if (prop && prop.id) {
-                //find the node we need to close
-                while(this.currentNode.id !== prop.id && this.currentNode.parentNode !== this.rootNode) {
-                    this.currentNode = this.currentNode.parentNode;
-                }
-                
-                //set the current node to its parent to 'close' it
-                this.currentNode = this.currentNode.parentNode;
-                
-            }
-            
-            /*
-             * Close parent by tag name
-             */
-            else if (prop && prop.tag) {
-                while(this.currentNode.tagName.toLowerCase() !== prop.tag.toLowerCase() && this.currentNode.parentNode !== this.rootNode) {
-                    this.currentNode = this.currentNode.parentNode;
-                }
-                this.currentNode = this.currentNode.parentNode;
-            }
+        end: function() {
             /*
              * Close first parent
              */
-            else {
-                if (this.currentNode !== this.rootNode) {
+            if (this.currentNode !== this.rootNode) {
                     this.currentNode = this.currentNode.parentNode;
-                }
             }
-        
             return this;
         },
         
@@ -100,7 +70,12 @@ function domBuilder(parent, tagNames) {
         },
         
         each: function(collection) {
-                 
+            context_stack.push({
+                node: this.currentNode,
+                collection: collection
+            });
+            
+            return this;
         }
     }; //that
 
